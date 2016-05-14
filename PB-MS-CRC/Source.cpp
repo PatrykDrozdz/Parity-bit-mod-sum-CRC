@@ -25,7 +25,7 @@ int main() {
 	int controlLenght = 0;
 
 
-	file.open("data2.gs", ios::binary | ios::in);
+	file.open("data2.foo", ios::binary | ios::in);
 
 	if (file.good() == true) {
 
@@ -42,6 +42,8 @@ int main() {
 
 		file.read(buffer, lenght);
 
+		crc.setLenght(lenght);
+
 		cout << "Dlugosc pliku: " << lenght << endl;
 
 		cout << endl;
@@ -49,16 +51,13 @@ int main() {
 
 		cout <<"Tresc pliku, binarnie: " <<endl;
 
-		cout << endl;
-		cout << endl;
-
 		for (int i = 0; i < lenght; i++) {
 
 			numbers = 0;
 
 			sum = sum + buffer[i] % ms.getMod();
 
-			for (int j = bits-1; j >= 0; j--) {
+			for (int j = 0; j <bits; j++) {
 				if ((buffer[i] & 1 << j)>0) {
 					cout << "1";
 					crcFirst.push_back(1);
@@ -123,6 +122,39 @@ int main() {
 
 		crc.setTabSize(crcFirst.size());
 
+		cout << "Bity na wekotrze" << endl;
+		for (int i = 0; i < crc.getTabSize(); i++) {
+			cout << crcFirst[i];
+		}
+
+		cout << endl;
+		cout << endl;
+
+		for (int i = 0; i < crc.getTabSize(); i++) {
+			crc.setTab(crcFirst[i], i);
+		}
+		
+		cout << "Bity z klasy" << endl;
+		for (int i = 0; i < crc.getTabSize(); i++) {
+			cout << crc.getTab(i);
+		}
+		
+		cout << endl;
+		cout << endl;
+		
+		crc.setStop();
+		crc.setCountBits();
+
+		crc.countCRC();
+
+		cout << "CRC:" << endl;
+
+		for (int i = 0; i < 3; i++) {
+			cout << crc.getResult(i);
+		}
+
+		cout << endl;
+		cout << endl;
 
 		file.close();
 	}
